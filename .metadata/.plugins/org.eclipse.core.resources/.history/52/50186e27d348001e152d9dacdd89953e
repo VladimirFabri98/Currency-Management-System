@@ -1,0 +1,5 @@
+package com.master.utility.http;
+
+public class HttpErrorInfo {
+
+}

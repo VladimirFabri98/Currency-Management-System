@@ -1,0 +1,10 @@
+package com.master.api.dto;
+
+import java.util.HashMap;
+
+public class BankAccount {
+
+	private int accountId;
+	private HashMap<String,Double> currencyList;
+	
+}

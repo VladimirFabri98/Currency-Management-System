@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="com.master.exchange.model.CurrencyExchangeModel"/>
+    <fullyQualifiedTypeName name="com.master.exchange.Mapper"/>
+    <fullyQualifiedTypeName name="org.springframework.http.ResponseEntity"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.Table"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.Id"/>
+    <fullyQualifiedTypeName name="java.util.Map.Entry"/>
+    <fullyQualifiedTypeName name="java.util.Set"/>
+    <fullyQualifiedTypeName name="com.master.account.Mapper"/>
+    <fullyQualifiedTypeName name="com.master.account.model.BankAccountModel"/>
+    <fullyQualifiedTypeName name="com.master.api.services.ConversionService"/>
+    <fullyQualifiedTypeName name="org.springframework.core.ParameterizedTypeReference"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="org.springframework.http.HttpMethod"/>
+    <fullyQualifiedTypeName name="java.util.Optional"/>
+    <fullyQualifiedTypeName name="com.master.api.dto.BankAccount"/>
+    <fullyQualifiedTypeName name="com.master.api.dto.CurrencyConversion"/>
+</qualifiedTypeNameHistroy>

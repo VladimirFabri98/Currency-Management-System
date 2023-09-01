@@ -1,0 +1,50 @@
+package com.master.conversion.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import com.master.api.dto.BankAccount;
+import com.master.api.dto.CurrencyExchange;
+import com.master.api.services.ConversionService;
+
+@RestController
+public class ConversionServiceImpl implements ConversionService {
+
+	@Autowired
+	private RestTemplate template;
+
+	private final String currencyExchangeUrl = "http://localhost:8000/currency-exchange-all";
+	private final String bankAccountUrl = "http://localhost:8100/bank-account";
+
+	@Override
+	public ResponseEntity<?> executeConversion(String from, String to, String username, double quantity) {
+		// getExchange by using from and to
+		double exchangeRate = 0.0;
+		List<CurrencyExchange> exchanges = template.exchange(currencyExchangeUrl, HttpMethod.GET, null, 
+				new ParameterizedTypeReference<List<CurrencyExchange>>() {}).getBody();
+		for(CurrencyExchange ce: exchanges) {
+			if(ce.getFrom().equals(from) && ce.getTo().equals(to)) {
+				exchangeRate = ce.getExchangeRate();
+				break;
+			}
+		}
+		if(exchangeRate == 0.0) {
+			return ResponseEntity.status(400).body("Requested exchange could not be found");
+		}
+		// use exhangeRate with quantity to gain total amount
+		double amountToExchange = exchangeRate * quantity;
+		// validate that there is an account with forwarded username
+		BankAccount account = template.getForEntity(bankAccountUrl + "?username=" + username, BankAccount.class).getBody();
+		// update the account with total amount
+		
+		// return the end result
+		return null;
+	}
+
+}

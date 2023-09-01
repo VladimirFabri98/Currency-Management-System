@@ -1,0 +1,45 @@
+package com.master.api.dto;
+
+import java.util.HashMap;
+
+public class BankAccount {
+
+	private int accountId;
+	private String currencyName;
+	private double currencyAmmount;
+
+	public BankAccount() {
+
+	}
+
+	public BankAccount(int accountId, String currencyName, double currencyAmmount) {
+		this.accountId = accountId;
+		this.currencyName = currencyName;
+		this.currencyAmmount = currencyAmmount;
+	}
+
+	public int getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(int accountId) {
+		this.accountId = accountId;
+	}
+
+	public String getCurrencyName() {
+		return currencyName;
+	}
+
+	public void setCurrencyName(String currencyName) {
+		this.currencyName = currencyName;
+	}
+
+	public double getCurrencyAmmount() {
+		return currencyAmmount;
+	}
+
+	public void setCurrencyAmmount(double currencyAmmount) {
+		this.currencyAmmount = currencyAmmount;
+	}
+
+}

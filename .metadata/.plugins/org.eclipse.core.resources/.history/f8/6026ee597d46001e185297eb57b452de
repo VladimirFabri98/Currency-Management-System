@@ -1,0 +1,51 @@
+package com.master.account.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "bank_account")
+public class BankAccountModel {
+
+	@Id
+	private int accountId;
+
+	private String currencyName;
+	private double currencyAmount;
+	
+	public BankAccountModel() {
+		
+	}
+
+	public BankAccountModel(int accountId, String currencyName, double currencyAmount) {
+		this.accountId = accountId;
+		this.currencyName = currencyName;
+		this.currencyAmount = currencyAmount;
+	}
+
+	public int getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(int accountId) {
+		this.accountId = accountId;
+	}
+
+	public String getCurrencyName() {
+		return currencyName;
+	}
+
+	public void setCurrencyName(String currencyName) {
+		this.currencyName = currencyName;
+	}
+
+	public double getCurrencyAmount() {
+		return currencyAmount;
+	}
+
+	public void setCurrencyAmount(double currencyAmount) {
+		this.currencyAmount = currencyAmount;
+	}
+
+}

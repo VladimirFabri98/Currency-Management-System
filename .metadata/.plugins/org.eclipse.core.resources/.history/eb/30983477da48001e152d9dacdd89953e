@@ -1,0 +1,9 @@
+package com.master.conversion.exception;
+
+import org.springframework.http.HttpStatus;
+
+public class ErrorDetails {
+
+	private final HttpStatus status;
+	private final String message;
+}

@@ -1,0 +1,10 @@
+package com.master.account.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.master.account.model.BankAccountModel;
+
+public interface BankAccountRepository extends JpaRepository<BankAccountModel, Integer>{
+
+	BankAccountModel findByUsername(String username);
+}

@@ -1,0 +1,43 @@
+package com.master.api.dto;
+
+public class CurrencyConversion {
+
+	private int conversionId;
+	private CurrencyExchange exchange;
+	private double quantity;
+
+	public CurrencyConversion() {
+		
+	}
+	
+	public CurrencyConversion(int conversionId, CurrencyExchange exchange, double quantity) {
+		this.conversionId = conversionId;
+		this.exchange = exchange;
+		this.quantity = quantity;
+	}
+
+	public int getConversionId() {
+		return conversionId;
+	}
+
+	public void setConversionId(int conversionId) {
+		this.conversionId = conversionId;
+	}
+
+	public CurrencyExchange getExchange() {
+		return exchange;
+	}
+
+	public void setExchange(CurrencyExchange exchange) {
+		this.exchange = exchange;
+	}
+
+	public double getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(double quantity) {
+		this.quantity = quantity;
+	}
+
+}

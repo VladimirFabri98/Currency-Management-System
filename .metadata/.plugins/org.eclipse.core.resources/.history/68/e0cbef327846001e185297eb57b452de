@@ -1,0 +1,13 @@
+package com.master.api.services;
+
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.master.api.dto.BankAccount;
+
+public interface AccountService {
+
+	@GetMapping
+	public List<BankAccount> getAllServices();
+}

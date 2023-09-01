@@ -1,0 +1,5 @@
+package com.master.exchange.service;
+
+public class CurrencyExchangeServiceImpl {
+
+}

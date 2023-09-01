@@ -1,0 +1,22 @@
+package com.master.conversion.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import com.master.api.services.ConversionService;
+
+@RestController
+public class ConversionServiceImpl implements ConversionService {
+
+	@Autowired
+	private RestTemplate template;
+	
+	@Override
+	public ResponseEntity<?> executeConversion(String from, String to, String username, double quantity) {
+		// getExchange by using from and to
+		return null;
+	}
+
+}

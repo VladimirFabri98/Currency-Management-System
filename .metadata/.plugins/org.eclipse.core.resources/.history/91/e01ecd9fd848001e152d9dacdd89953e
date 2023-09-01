@@ -1,0 +1,5 @@
+package com.master.conversion.exception;
+
+public class NotFoundException {
+
+}

@@ -1,0 +1,5 @@
+package com.master.api.dto;
+
+public class BankAccount {
+
+}

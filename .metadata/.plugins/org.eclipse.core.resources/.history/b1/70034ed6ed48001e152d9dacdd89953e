@@ -1,0 +1,28 @@
+package com.master.utility.exception;
+
+import org.springframework.http.HttpStatus;
+
+public class ErrorDetails {
+
+	private final HttpStatus status;
+	private final BusinessException e;
+	
+	public ErrorDetails() {
+		status = null;
+		e = null;
+	}
+
+	public ErrorDetails(HttpStatus status, Exception e) {
+		this.status = status;
+		this.e = e;
+	}
+
+	public HttpStatus getStatus() {
+		return status;
+	}
+
+	public Exception getMessage() {
+		return e;
+	}
+
+}

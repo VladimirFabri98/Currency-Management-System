@@ -1,0 +1,19 @@
+package com.master.conversion.exception;
+
+import java.util.NoSuchElementException;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+
+@ControllerAdvice
+public class GlobalControllerExceptionHandler {
+
+	@ExceptionHandler(NoSuchElementException.class)
+	public @ResponseBody ResponseEntity<?> handleNoSuchElementException(ServerHttpRequest request, Exception ex) {
+		return ResponseEntity.status(400).body("Testing");
+	}
+}
