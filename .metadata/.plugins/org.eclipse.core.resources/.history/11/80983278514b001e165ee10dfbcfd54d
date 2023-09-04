@@ -1,0 +1,27 @@
+package com.master.conversion.configuration;
+
+import java.io.IOException;
+import java.time.Duration;
+import java.util.concurrent.TimeoutException;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import com.master.utility.exception.BusinessException;
+
+import io.github.resilience4j.retry.RetryConfig;
+
+@Configuration
+public class RetryConfiguration {
+
+	RetryConfig config = RetryConfig.custom()
+			  .maxAttempts(2)
+			  .waitDuration(Duration.ofMillis(1000))
+			  .retryOnResult(response -> response.getStatus() == 500)
+			  .retryOnException(e -> e instanceof WebServiceException)
+			  .retryExceptions(IOException.class, TimeoutException.class)
+			  .ignoreExceptions(BusinessException.class, OtherBusinessException.class)
+			  .failAfterMaxAttempts(true)
+			  .build();
+	
+}

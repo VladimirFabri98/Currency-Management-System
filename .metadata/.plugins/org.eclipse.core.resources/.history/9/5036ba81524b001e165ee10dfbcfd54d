@@ -1,0 +1,5 @@
+spring.application.name = currency-conversion
+server.port = 8200
+
+resilience4j.retry.instances.default.wait-duration=5s
+resilience4j.retry.instances.default.max-attempts=3

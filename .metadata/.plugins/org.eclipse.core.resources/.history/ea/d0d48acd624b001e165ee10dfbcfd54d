@@ -1,0 +1,17 @@
+spring.application.name = currency-conversion
+server.port = 8200
+
+resilience4j.retry.instances.default.wait-duration=2s
+resilience4j.retry.instances.default.max-attempts=3
+resilience4j.retry.instances.default.retry-exceptions=org.springframework.web.client.ResourceAccessException
+
+##Exponential backoff
+resilience4j.retry.instances.exponential.wait-duration=2s
+resilience4j.retry.instances.exponential.max-attempts=4
+resilience4j.retry.instances.exponential.retry-exceptions=org.springframework.web.client.ResourceAccessException
+resilience4j.retry.instances.exponential.enable-exponential-backoff=true
+resilience4j.retry.instances.exponential.exponential-backoff-multiplier=2
+
+##Jitter
+resilience4j.retry.instances.jitter.max-attempts=6
+resilience4j.retry.instances.jitter.retry-exceptions=org.springframework.web.client.ResourceAccessException

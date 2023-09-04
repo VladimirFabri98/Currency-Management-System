@@ -27,6 +27,7 @@ public class CurrencyExchangeServiceImpl implements ExchangeService {
 		if(entity.isPresent()) {
 			return mapper.entityToApi(entity.get());
 		}else {
+			//This exception will be wrapped inside of a HttpServerErrorException
 			throw new RuntimeException();
 		}
 		
