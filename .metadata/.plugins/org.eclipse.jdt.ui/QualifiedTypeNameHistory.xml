@@ -23,4 +23,11 @@
     <fullyQualifiedTypeName name="java.util.NoSuchElementException"/>
     <fullyQualifiedTypeName name="com.master.utility.exception.GlobalControllerExceptionHandler"/>
     <fullyQualifiedTypeName name="java.util.Optional"/>
+    <fullyQualifiedTypeName name="java.time.Duration"/>
+    <fullyQualifiedTypeName name="org.slf4j.Logger"/>
+    <fullyQualifiedTypeName name="org.slf4j.LoggerFactory"/>
+    <fullyQualifiedTypeName name="io.github.resilience4j.retry.Retry"/>
+    <fullyQualifiedTypeName name="com.master.utility.exception.NoDataException"/>
+    <fullyQualifiedTypeName name="io.github.resilience4j.retry.RetryConfig"/>
+    <fullyQualifiedTypeName name="org.springframework.web.client.ResourceAccessException"/>
 </qualifiedTypeNameHistroy>

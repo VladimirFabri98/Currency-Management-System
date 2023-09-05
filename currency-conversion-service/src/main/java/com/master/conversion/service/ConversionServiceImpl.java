@@ -49,16 +49,20 @@ public class ConversionServiceImpl implements ConversionService {
 		// If a ResourceAccessException occurs
 		// Method will be invoked several times depending on the max-retry attempts
 		// property value defined in application.properties
-		retry.executeSupplier(() -> exchange = acquireExchange(quantity, from, to, username));
+		try {
+			retry.executeSupplier(() -> exchange = acquireExchange(quantity, from, to, username));
+			// validate that there is an account with forwarded username
+			retry.executeSupplier(() -> account = acquireAccount(username));
 
+		}catch(ResourceAccessException ex) {
+			return fallbackResponse(ex);
+		}
+		
+		
 		// Once currencyExchange object is obtained its exchangeRate is multiplied by
-		// quantity to get the amount of to currency
-		// that has to be added to the bank account
-		double amountToExchange = exchange.getExchangeRate() * quantity;
-
-		// validate that there is an account with forwarded username
-		retry.executeSupplier(() -> account = acquireAccount(username));
-
+				// quantity to get the amount of to currency
+				// that has to be added to the bank account
+				double amountToExchange = exchange.getExchangeRate() * quantity;
 		// Check if there is enough of "from" currency to execute the conversion, if not
 		// custom InsufficientFundsException is thrown
 		if (transactionValid(account, quantity, from)) {
@@ -114,6 +118,17 @@ public class ConversionServiceImpl implements ConversionService {
 				.build();
 		RetryRegistry registry = RetryRegistry.of(jitterConfig);
 		this.retry = registry.retry("jitter",jitterConfig);
+	}
+	
+	private ResponseEntity<?> fallbackResponse(Exception ex){
+		String[] messageArray = ex.getMessage().split(" ");
+		String[] actualServiceUrlArray = messageArray[6].substring(1, messageArray[6].length()-2).split("/");
+		//  [0]http: [1]"" [2]localhost:8000 [3]currency-exchange or [3]bank-account
+		String actualServiceUrl = messageArray[6].substring(1,messageArray[6].length()-2);
+		// http://localhost:8000/currency-exchange or http://localhost:8100/bank-account
+		String serviceName = actualServiceUrlArray[3];
+		return ResponseEntity.status(503).body("Service: " + serviceName + " at: " + actualServiceUrl +
+				" is currently unavailable!");
 	}
 
 }

@@ -32,4 +32,5 @@ public class GlobalControllerExceptionHandler {
 
 		return ResponseEntity.status(400).body(errorModel);
 	}
+	
 }
