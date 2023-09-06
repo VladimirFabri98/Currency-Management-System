@@ -15,7 +15,10 @@ import com.master.api.dto.CurrencyExchange;
 import com.master.api.services.ConversionService;
 import com.master.utility.exception.InsufficientFundsException;
 import com.master.utility.exception.NoDataException;
+import com.master.utility.exception.ServiceUnavailableException;
 
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.core.IntervalFunction;
 import io.github.resilience4j.retry.Retry;
 import io.github.resilience4j.retry.RetryConfig;
@@ -43,26 +46,27 @@ public class ConversionServiceImpl implements ConversionService {
 	}
 
 	@Override
+	@CircuitBreaker(name = "cb", fallbackMethod = "fallback")
 	public ResponseEntity<?> executeConversion(String from, String to, String username, double quantity) {
 
 		// Request to currencyExchange has been delegated to executeSupplier method
 		// If a ResourceAccessException occurs
 		// Method will be invoked several times depending on the max-retry attempts
 		// property value defined in application.properties
+
 		try {
 			retry.executeSupplier(() -> exchange = acquireExchange(quantity, from, to, username));
 			// validate that there is an account with forwarded username
 			retry.executeSupplier(() -> account = acquireAccount(username));
 
-		}catch(ResourceAccessException ex) {
-			return fallbackResponse(ex);
+		} catch (ResourceAccessException e) {
+			throw new ServiceUnavailableException(e.getMessage());
 		}
 		
-		
 		// Once currencyExchange object is obtained its exchangeRate is multiplied by
-				// quantity to get the amount of to currency
-				// that has to be added to the bank account
-				double amountToExchange = exchange.getExchangeRate() * quantity;
+		// quantity to get the amount of to currency
+		// that has to be added to the bank account
+		double amountToExchange = exchange.getExchangeRate() * quantity;
 		// Check if there is enough of "from" currency to execute the conversion, if not
 		// custom InsufficientFundsException is thrown
 		if (transactionValid(account, quantity, from)) {
@@ -112,23 +116,15 @@ public class ConversionServiceImpl implements ConversionService {
 	}
 
 	private void createJitterConfig() {
-		IntervalFunction randomWaitInterval = IntervalFunction.ofRandomized(2000,0.5);
-		RetryConfig jitterConfig = RetryConfig.custom().maxAttempts(6).retryExceptions(ResourceAccessException.class)
-				.intervalFunction(randomWaitInterval)
-				.build();
+		IntervalFunction randomWaitInterval = IntervalFunction.ofRandomized(2000, 0.5);
+		RetryConfig jitterConfig = RetryConfig.custom().maxAttempts(3).retryExceptions(ResourceAccessException.class)
+				.intervalFunction(randomWaitInterval).build();
 		RetryRegistry registry = RetryRegistry.of(jitterConfig);
-		this.retry = registry.retry("jitter",jitterConfig);
+		this.retry = registry.retry("jitter", jitterConfig);
 	}
-	
-	private ResponseEntity<?> fallbackResponse(Exception ex){
-		String[] messageArray = ex.getMessage().split(" ");
-		String[] actualServiceUrlArray = messageArray[6].substring(1, messageArray[6].length()-2).split("/");
-		//  [0]http: [1]"" [2]localhost:8000 [3]currency-exchange or [3]bank-account
-		String actualServiceUrl = messageArray[6].substring(1,messageArray[6].length()-2);
-		// http://localhost:8000/currency-exchange or http://localhost:8100/bank-account
-		String serviceName = actualServiceUrlArray[3];
-		return ResponseEntity.status(503).body("Service: " + serviceName + " at: " + actualServiceUrl +
-				" is currently unavailable!");
+
+	public ResponseEntity<?> fallback(CallNotPermittedException ex) {
+		return ResponseEntity.status(429).body("Service is temporarily unavailable, please try again in 20 seconds.");
 	}
 
 }

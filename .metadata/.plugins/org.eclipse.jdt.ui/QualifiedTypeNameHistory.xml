@@ -16,7 +16,6 @@
     <fullyQualifiedTypeName name="com.master.api.dto.CurrencyConversion"/>
     <fullyQualifiedTypeName name="org.springframework.http.server.ServerHttpRequest"/>
     <fullyQualifiedTypeName name="com.master.utility.exceptions.NotFoundException"/>
-    <fullyQualifiedTypeName name="org.springframework.http.ResponseEntity"/>
     <fullyQualifiedTypeName name="com.master.conversion.exception.NotFoundException"/>
     <fullyQualifiedTypeName name="org.springframework.http.HttpStatus"/>
     <fullyQualifiedTypeName name="com.master.utility.exception.NotFoundException"/>
@@ -24,10 +23,11 @@
     <fullyQualifiedTypeName name="com.master.utility.exception.GlobalControllerExceptionHandler"/>
     <fullyQualifiedTypeName name="java.util.Optional"/>
     <fullyQualifiedTypeName name="java.time.Duration"/>
-    <fullyQualifiedTypeName name="org.slf4j.Logger"/>
     <fullyQualifiedTypeName name="org.slf4j.LoggerFactory"/>
     <fullyQualifiedTypeName name="io.github.resilience4j.retry.Retry"/>
     <fullyQualifiedTypeName name="com.master.utility.exception.NoDataException"/>
     <fullyQualifiedTypeName name="io.github.resilience4j.retry.RetryConfig"/>
     <fullyQualifiedTypeName name="org.springframework.web.client.ResourceAccessException"/>
+    <fullyQualifiedTypeName name="org.springframework.http.ResponseEntity"/>
+    <fullyQualifiedTypeName name="org.slf4j.Logger"/>
 </qualifiedTypeNameHistroy>

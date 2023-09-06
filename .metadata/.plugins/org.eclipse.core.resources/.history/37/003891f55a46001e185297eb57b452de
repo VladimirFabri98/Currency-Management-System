@@ -1,5 +1,0 @@
-package com.master.exchange.repository;
-
-public interface ExchangeRepository {
-
-}

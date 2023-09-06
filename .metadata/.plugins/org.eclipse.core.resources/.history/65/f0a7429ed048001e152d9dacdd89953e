@@ -1,9 +1,0 @@
-package com.master.exchange.repository;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.master.exchange.model.CurrencyExchangeModel;
-
-public interface ExchangeRepository extends JpaRepository<CurrencyExchangeModel,Integer> {
-
-}

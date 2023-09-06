@@ -1,5 +1,0 @@
-package com.master.api.services;
-
-public interface ExchangeService {
-
-}

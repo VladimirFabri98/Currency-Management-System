@@ -1,5 +1,0 @@
-package com.master.account.service;
-
-public class BankAccountServiceImpl {
-
-}
