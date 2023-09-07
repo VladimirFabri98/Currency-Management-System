@@ -1,20 +1,14 @@
 package com.master.conversion.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestTemplate;
 
 import com.master.api.dto.BankAccount;
 import com.master.api.dto.CurrencyConversion;
 import com.master.api.dto.CurrencyExchange;
 import com.master.api.services.ConversionService;
 import com.master.utility.exception.InsufficientFundsException;
-import com.master.utility.exception.NoDataException;
 import com.master.utility.exception.ServiceUnavailableException;
 
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
@@ -27,19 +21,13 @@ import io.github.resilience4j.retry.RetryRegistry;
 @RestController
 public class ConversionServiceImpl implements ConversionService {
 
-	private final RestTemplate template;
-	private Retry retry;
-
-	private final Logger logger = LoggerFactory.getLogger(ConversionServiceImpl.class);
-
-	private final String currencyExchangeUrl = "http://localhost:8000/currency-exchange";
-	private final String bankAccountUrl = "http://localhost:8100/bank-account";
-
+	private FetchingService service;
 	private BankAccount account;
 	private CurrencyExchange exchange;
+	private Retry retry;
 
-	ConversionServiceImpl(RestTemplate template, RetryRegistry registry) {
-		this.template = template;
+	ConversionServiceImpl(RetryRegistry registry, FetchingService service) {
+		this.service = service;
 		// this.retry = registry.retry("default");
 		// this.retry = registry.retry("exponential");
 		createJitterConfig();
@@ -48,21 +36,18 @@ public class ConversionServiceImpl implements ConversionService {
 	@Override
 	@CircuitBreaker(name = "cb", fallbackMethod = "fallback")
 	public ResponseEntity<?> executeConversion(String from, String to, String username, double quantity) {
-
+		// logger.info("Executing method...");
 		// Request to currencyExchange has been delegated to executeSupplier method
 		// If a ResourceAccessException occurs
 		// Method will be invoked several times depending on the max-retry attempts
 		// property value defined in application.properties
-
 		try {
-			retry.executeSupplier(() -> exchange = acquireExchange(quantity, from, to, username));
+			retry.executeSupplier(() -> exchange = service.acquireExchange(quantity, from, to, username));
 			// validate that there is an account with forwarded username
-			retry.executeSupplier(() -> account = acquireAccount(username));
-
+			retry.executeSupplier(() -> account = service.acquireAccount(username));
 		} catch (ResourceAccessException e) {
 			throw new ServiceUnavailableException(e.getMessage());
 		}
-		
 		// Once currencyExchange object is obtained its exchangeRate is multiplied by
 		// quantity to get the amount of to currency
 		// that has to be added to the bank account
@@ -71,10 +56,7 @@ public class ConversionServiceImpl implements ConversionService {
 		// custom InsufficientFundsException is thrown
 		if (transactionValid(account, quantity, from)) {
 			// If previous condition is true, make changes to the bank-account
-			account = template.exchange(
-					bankAccountUrl + "?from=" + from + "&to=" + to + "&quantityFrom=" + quantity + "&totalTo="
-							+ amountToExchange + "&username=" + account.getUsername(),
-					HttpMethod.PUT, null, BankAccount.class).getBody();
+			account = service.updateAccount(from, to, quantity, amountToExchange, account.getUsername());
 		} else {
 			throw new InsufficientFundsException(from, quantity, account.getFromCurrency(from));
 		}
@@ -88,31 +70,6 @@ public class ConversionServiceImpl implements ConversionService {
 		if (account.getFromCurrency(from) - conversionQuantity >= 0)
 			return true;
 		return false;
-	}
-
-	private CurrencyExchange acquireExchange(double quantity, String from, String to, String username) {
-		logger.info("Process of conversion of {} {} to {} for the user {} begins", quantity, from, to, username);
-		CurrencyExchange exchange = null;
-		try {
-			exchange = template
-					.getForEntity(currencyExchangeUrl + "?from=" + from + "&to=" + to, CurrencyExchange.class)
-					.getBody();
-		} catch (HttpServerErrorException e) {
-			throw new NoDataException(from, to);
-		}
-
-		return exchange;
-	}
-
-	private BankAccount acquireAccount(String username) {
-		logger.info("Retrieving bank account for user: {} ", username);
-		BankAccount account = null;
-		try {
-			account = template.getForEntity(bankAccountUrl + "?username=" + username, BankAccount.class).getBody();
-		} catch (HttpServerErrorException e) {
-			throw new NoDataException(username);
-		}
-		return account;
 	}
 
 	private void createJitterConfig() {

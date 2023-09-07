@@ -30,4 +30,5 @@
     <fullyQualifiedTypeName name="org.springframework.web.client.ResourceAccessException"/>
     <fullyQualifiedTypeName name="org.springframework.http.ResponseEntity"/>
     <fullyQualifiedTypeName name="org.slf4j.Logger"/>
+    <fullyQualifiedTypeName name="com.master.utility.exception.ServiceUnavailable"/>
 </qualifiedTypeNameHistroy>
