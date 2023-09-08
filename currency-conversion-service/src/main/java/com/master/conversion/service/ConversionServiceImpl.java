@@ -45,7 +45,7 @@ public class ConversionServiceImpl implements ConversionService {
 			retry.executeSupplier(() -> exchange = service.acquireExchange(quantity, from, to, username));
 			// validate that there is an account with forwarded username
 			retry.executeSupplier(() -> account = service.acquireAccount(username));
-		} catch (ResourceAccessException e) {
+		} catch (Exception e) {
 			throw new ServiceUnavailableException(e.getMessage());
 		}
 		// Once currencyExchange object is obtained its exchangeRate is multiplied by

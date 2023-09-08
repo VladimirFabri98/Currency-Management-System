@@ -46,4 +46,9 @@ public class GlobalControllerExceptionHandler {
 		return ResponseEntity.status(503).body(errorModel);
 	}
 	
+	@ExceptionHandler(RuntimeException.class)
+	public ResponseEntity<?> chaosMonkey(RuntimeException e){
+		return ResponseEntity.ok("Chaos monkey exception ;)");
+	}
+
 }
